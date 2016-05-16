@@ -8,6 +8,9 @@ import javafx.scene.image.ImageView;
 
 import javax.swing.filechooser.FileSystemView;
 import java.io.File;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,10 +29,8 @@ public class TreeClass {
     public void setTree(){
         File[] fileList = File.listRoots();
         List<File> list = new ArrayList<>();
-        Integer i = 0;
         for (File f:fileList){
             list.add(new File(f.getPath()));
-            i++;
         }
         Node myComputerIcon = new ImageView(computerIcon);
         TreeItem<String> rootNode = new TreeItem<>("My Computer",myComputerIcon);
@@ -39,23 +40,47 @@ public class TreeClass {
         String dvdDrive = fsv.getSystemTypeDescription(list.get(2));
         String flashDrive = fsv.getSystemTypeDescription(list.get(3));
         for (Integer index =0; index < list.size(); index++){
-            TreeItem<String> diskLeaf;
+            TreeItem<String> diskNode;
             if (fsv.getSystemTypeDescription(list.get(index)).equals(harDrive)){
-                diskLeaf = new TreeItem<>(list.get(index).toString(), new ImageView(hardDriveIcon));
+                diskNode = new TreeItem<>(list.get(index).toString(), new ImageView(hardDriveIcon));
             }else {
                 if (fsv.getSystemTypeDescription(list.get(index)).equals(flashDrive)) {
-                    diskLeaf = new TreeItem<>(list.get(index).toString(), new ImageView(flashDriveIcon));
+                    diskNode = new TreeItem<>(list.get(index).toString(), new ImageView(flashDriveIcon));
                 }else{
                     if (fsv.getSystemTypeDescription(list.get(index)).equals(dvdDrive)){
-                        diskLeaf = new TreeItem<>(list.get(index).toString(), new ImageView(dvdDriveIcon));
+                        diskNode = new TreeItem<>(list.get(index).toString(), new ImageView(dvdDriveIcon));
                     }else{
-                        diskLeaf = new TreeItem<>(list.get(index).toString());
+                        diskNode = new TreeItem<>(list.get(index).toString());
                     }
                 }
             }
-            rootNode.getChildren().add(diskLeaf);
+            String diskPath = diskNode.getValue();
+            diskPath = diskPath.substring(0,2) + "/";
+            File folderList = new File(diskPath);
+            List<File> secList = new ArrayList<File>();
+            folderSearch(folderList, diskNode);
+            rootNode.getChildren().add(diskNode);
         }
         treeView = new TreeView<>(rootNode);
+    }
+
+    private void folderSearch(File folderList, TreeItem<String> rootNode){
+        File folders = new File(folderList.getPath());
+        Path path = FileSystems.getDefault().getPath(folders.getPath());
+        List<File> secList = new ArrayList<File>();
+        if (Files.isReadable(path) && !Files.isSymbolicLink(path)) {
+            for (File f : folders.listFiles()) {
+//                System.out.println(f.getPath());
+                if (f.isDirectory()) {
+                    folderSearch(f, new TreeItem<String>(f.getName(), new ImageView(folderIcon)));
+                    secList.add(new File(f.getPath()));
+                }
+            }
+            for (Integer folderIndex = 0; folderIndex < secList.size(); folderIndex++) {
+                TreeItem<String> folderLeaf = new TreeItem<String>(secList.get(folderIndex).toString(), new ImageView(folderIcon));
+                rootNode.getChildren().add(folderLeaf);
+            }
+        }
     }
 
     public TreeView getTreeView(){

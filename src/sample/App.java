@@ -31,6 +31,7 @@ public class App extends Application {
         tree.setHardDriveIcon(new Image(getClass().getResourceAsStream("diskIcon.png")));
         tree.setFlashDriveIcon(new Image(getClass().getResourceAsStream("flashDriveIcon.png")));
         tree.setDvdDriveIcon(new Image(getClass().getResourceAsStream("dvdDriveIcon.png")));
+        tree.setFolderIcon(new Image(getClass().getResourceAsStream("folderIcon.png")));
         tree.setTree();
         BorderPane mainLayout = new BorderPane();
         mainLayout.setCenter(tree.getTreeView());
