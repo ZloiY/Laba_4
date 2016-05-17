@@ -3,6 +3,7 @@ package sample;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -29,6 +30,7 @@ public class App extends Application {
     RadioButton[] rbs;
     FilePane folderView;
     BorderPane mainLayout;
+    File treeFile;
 
     public void start(Stage window) throws Exception{
         window.setTitle("Custom FileChooser");
@@ -46,6 +48,21 @@ public class App extends Application {
         rbs[1].setToggleGroup(toggleGroup);
         rbs[2].setToggleGroup(toggleGroup);
         rbs[0].setSelected(true);
+        Button upFolderButton = new Button("",new ImageView(new Image(getClass().getResourceAsStream("upfolderIcon.png"))));
+        upFolderButton.setOnAction(e -> {
+            File prevFolder;
+            if (folderView.getCurrentFile() == null){
+                prevFolder = treeFile.getParentFile();
+            }else{
+                prevFolder = folderView.getCurrentFile().getParentFile();
+            }
+            if (rbs[0].isSelected()){
+                setFolderView(prevFolder);
+            }
+            if (rbs[1].isSelected()){
+                setListView(prevFolder);
+            }
+        });
         tree.setComputerIcon(new Image(getClass().getResourceAsStream("mycomputerIcon.png")));
         tree.setHardDriveIcon(new Image(getClass().getResourceAsStream("diskIcon.png")));
         tree.setFlashDriveIcon(new Image(getClass().getResourceAsStream("flashDriveIcon.png")));
@@ -54,18 +71,36 @@ public class App extends Application {
         tree.setTree();
         mainLayout = new BorderPane();
         mainLayout.setLeft(tree.getTreeView());
-        mainLayout.setTop(new HBox(5, rbs));
+        HBox viewHBox = new HBox(10);
+        viewHBox.setAlignment(Pos.CENTER_LEFT);
+        viewHBox.getChildren().addAll(rbs);
+        viewHBox.getChildren().add(upFolderButton);
+        mainLayout.setTop(viewHBox);
         mainLayout.setCenter(folderView.getListFolderPane());
+        rbs[0].setOnAction(e ->{
+            if (folderView.getCurrentFile() == null){
+                folderView.setFolderView(treeFile);
+            }else {
+                setFolderView(folderView.getCurrentFile());
+            }
+        });
+        rbs[1].setOnAction(e ->{
+            if (folderView.getCurrentFile() == null){
+                folderView.setListView(treeFile);
+            }else {
+                setListView(folderView.getCurrentFile());
+            }
+        });
         tree.getTreeView().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
                 TreeItem<String> selectedItem = (TreeItem<String>) newValue;
-                File f = new File(selectedItem.getValue());
+                treeFile = new File(selectedItem.getValue());
                 if(rbs[0].isSelected()){
-                    folderView.setFolderView(f);
+                    folderView.setFolderView(treeFile);
                     mainLayout.setCenter(folderView.getListFolderPane());
                 }
                 if(rbs[1].isSelected()) {
-                    folderView.setListView(f);
+                    folderView.setListView(treeFile);
                     mainLayout.setCenter(folderView.getListFolderPane());
                 }
             }
@@ -74,7 +109,14 @@ public class App extends Application {
         window.show();
     }
 
-    private void setView(){
+    private void setFolderView(File currentFile){
+        folderView.setFolderView(currentFile);
+        mainLayout.setCenter(folderView.getListFolderPane());
+    }
+
+    private void setListView(File currentFile){
+        folderView.setFolderView(currentFile);
+        mainLayout.setCenter(folderView.getListFolderPane());
     }
 
     public static void run(String[] args){

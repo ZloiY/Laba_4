@@ -93,7 +93,7 @@ public class FilePane {
 //                        folder[0].getListFolder().setStyle("-fx-background-color: #4cafff;");
                         fileNameTF.setText(f.getName());
                         if (e.getClickCount() == 2){
-
+                            currentFile = f;
                         }
                     }
                 });
@@ -106,8 +106,10 @@ public class FilePane {
                     if(e.getButton().equals(MouseButton.PRIMARY)) {
                         fileNameTF.setText(f.getName());
 //                        folder[0].getListFolder().setStyle("-fx-background-color: #4cafff;");
-                        if (e.getClickCount() == 2)
+                        if (e.getClickCount() == 2) {
+                            currentFile = f;
                             setListView(f);
+                        }
                     }
                 });
             }
