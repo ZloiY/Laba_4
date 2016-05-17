@@ -50,6 +50,10 @@ public class FilePane {
         return currentFile;
     }
 
+    public void setCurrentFile(File currentFile) {
+        this.currentFile = currentFile;
+    }
+
     public void setFolderView(File path) {
         grid.getChildren().remove(0, grid.getChildren().size());
         Integer folderRow = 0;

@@ -53,14 +53,27 @@ public class App extends Application {
             File prevFolder;
             if (folderView.getCurrentFile() == null){
                 prevFolder = treeFile.getParentFile();
+                folderView.setCurrentFile(prevFolder);
             }else{
                 prevFolder = folderView.getCurrentFile().getParentFile();
+                folderView.setCurrentFile(prevFolder);
             }
             if (rbs[0].isSelected()){
                 setFolderView(prevFolder);
             }
             if (rbs[1].isSelected()){
                 setListView(prevFolder);
+            }
+        });
+        Button homeFolder = new Button("", new ImageView(new Image(getClass().getResourceAsStream("homefolderIcon.png"))));
+        homeFolder.setOnAction(e ->{
+            File homeFile = new File(System.getProperty("user.home"));
+            folderView.setCurrentFile(homeFile);
+            if (rbs[0].isSelected()){
+                setFolderView(homeFile);
+            }
+            if(rbs[1].isSelected()){
+                setListView(homeFile);
             }
         });
         tree.setComputerIcon(new Image(getClass().getResourceAsStream("mycomputerIcon.png")));
@@ -75,6 +88,7 @@ public class App extends Application {
         viewHBox.setAlignment(Pos.CENTER_LEFT);
         viewHBox.getChildren().addAll(rbs);
         viewHBox.getChildren().add(upFolderButton);
+        viewHBox.getChildren().add(homeFolder);
         mainLayout.setTop(viewHBox);
         mainLayout.setCenter(folderView.getListFolderPane());
         rbs[0].setOnAction(e ->{
@@ -97,6 +111,7 @@ public class App extends Application {
                 treeFile = new File(selectedItem.getValue());
                 if(rbs[0].isSelected()){
                     folderView.setFolderView(treeFile);
+//                    setTreeView();
                     mainLayout.setCenter(folderView.getListFolderPane());
                 }
                 if(rbs[1].isSelected()) {
@@ -109,13 +124,22 @@ public class App extends Application {
         window.show();
     }
 
+    private void setTreeView(){
+        for (Integer index =0; index < tree.getTreeView().getRoot().getChildren().size(); index++){
+            TreeItem<String> selectedFolder = (TreeItem<String>) tree.getTreeView().getRoot().getChildren().get(index);
+            if(selectedFolder.equals(folderView.getCurrentFile().getPath())){
+                selectedFolder.setExpanded(true);
+            }
+        }
+    }
+
     private void setFolderView(File currentFile){
         folderView.setFolderView(currentFile);
         mainLayout.setCenter(folderView.getListFolderPane());
     }
 
     private void setListView(File currentFile){
-        folderView.setFolderView(currentFile);
+        folderView.setListView(currentFile);
         mainLayout.setCenter(folderView.getListFolderPane());
     }
 
