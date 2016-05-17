@@ -25,14 +25,22 @@ import java.util.TreeMap;
  */
 public class App extends Application {
 
+    TreeClass tree;
+    RadioButton[] rbs;
+    FilePane folderView;
+    BorderPane mainLayout;
+
     public void start(Stage window) throws Exception{
         window.setTitle("Custom FileChooser");
-        TreeClass tree = new TreeClass();
-        FilePane folderView = new FilePane();
-        RadioButton[] rbs = new RadioButton[3];
+        tree = new TreeClass();
+        folderView = new FilePane();
+        rbs = new RadioButton[3];
         rbs[0] = new RadioButton("Folder view");
+        rbs[0].setGraphic(new ImageView(new Image(getClass().getResourceAsStream("folderViewIcon.png"))));
         rbs[1] = new RadioButton("List view");
+        rbs[1].setGraphic(new ImageView(new Image(getClass().getResourceAsStream("listIcon.png"))));
         rbs[2] = new RadioButton("Table view");
+        rbs[2].setGraphic(new ImageView(new Image(getClass().getResourceAsStream("tableIcon.png"))));
         ToggleGroup toggleGroup =new ToggleGroup();
         rbs[0].setToggleGroup(toggleGroup);
         rbs[1].setToggleGroup(toggleGroup);
@@ -44,7 +52,7 @@ public class App extends Application {
         tree.setDvdDriveIcon(new Image(getClass().getResourceAsStream("dvdDriveIcon.png")));
         tree.setFolderIcon(new Image(getClass().getResourceAsStream("folderIcon.png")));
         tree.setTree();
-        BorderPane mainLayout = new BorderPane();
+        mainLayout = new BorderPane();
         mainLayout.setLeft(tree.getTreeView());
         mainLayout.setTop(new HBox(5, rbs));
         mainLayout.setCenter(folderView.getListFolderPane());
@@ -64,6 +72,9 @@ public class App extends Application {
         });
         window.setScene(new Scene(mainLayout, 800, 600));
         window.show();
+    }
+
+    private void setView(){
     }
 
     public static void run(String[] args){

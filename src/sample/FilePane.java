@@ -1,21 +1,14 @@
 package sample;
 
-import com.sun.xml.internal.txw2.output.IndentingXMLStreamWriter;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.geometry.*;
 import javafx.geometry.Insets;
-import javafx.scene.control.ScrollBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.*;
 
 import java.io.File;
 
@@ -27,6 +20,7 @@ public class FilePane {
     private BorderPane tablePane;
     private GridPane grid;
     private TextField fileNameTF;
+    private File currentFile;
     final FolderView[] folder;
 
     FilePane() {
@@ -52,6 +46,10 @@ public class FilePane {
         return tablePane;
     }
 
+    public File getCurrentFile() {
+        return currentFile;
+    }
+
     public void setFolderView(File path) {
         grid.getChildren().remove(0, grid.getChildren().size());
         Integer folderRow = 0;
@@ -71,7 +69,10 @@ public class FilePane {
                     if (e.getButton().equals(MouseButton.PRIMARY)){
 //                        folder[0].getFolder().setStyle("-fx-background-color: #4cafff;");
                         fileNameTF.setText(f.getName());
-                        if(e.getClickCount() == 2){ setFolderView(f);}
+                        if(e.getClickCount() == 2){
+                            currentFile = f;
+                            setFolderView(f);
+                        }
                     }
                 });
             }
