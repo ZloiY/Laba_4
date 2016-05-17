@@ -27,6 +27,7 @@ public class App extends Application {
     public void start(Stage window) throws Exception{
         window.setTitle("Custom FileChooser");
         TreeClass tree = new TreeClass();
+        FilePane folderView = new FilePane();
         tree.setComputerIcon(new Image(getClass().getResourceAsStream("mycomputerIcon.png")));
         tree.setHardDriveIcon(new Image(getClass().getResourceAsStream("diskIcon.png")));
         tree.setFlashDriveIcon(new Image(getClass().getResourceAsStream("flashDriveIcon.png")));
@@ -34,7 +35,10 @@ public class App extends Application {
         tree.setFolderIcon(new Image(getClass().getResourceAsStream("folderIcon.png")));
         tree.setTree();
         BorderPane mainLayout = new BorderPane();
-        mainLayout.setCenter(tree.getTreeView());
+        mainLayout.setLeft(tree.getTreeView());
+        tree.getTreeView().setOnMouseClicked(e ->{
+
+        });
         window.setScene(new Scene(mainLayout, 800, 600));
         window.show();
     }
