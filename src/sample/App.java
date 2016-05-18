@@ -26,12 +26,12 @@ import java.util.TreeMap;
  */
 public class App extends Application {
 
-    TreeClass tree;
-    RadioButton[] rbs;
-    FilePane folderView;
-    BorderPane mainLayout;
-    File treeFile;
-    Label currPath;
+    private TreeClass tree;
+    private RadioButton[] rbs;
+    private FilePane folderView;
+    private BorderPane mainLayout;
+    private File treeFile;
+    public static Label currPath;
 
     public void start(Stage window) throws Exception{
         window.setTitle("Custom FileChooser");

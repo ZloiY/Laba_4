@@ -2,9 +2,13 @@ package sample;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
+import javafx.util.Callback;
 
 /**
  * Created by ZloiY on 18.05.2016.
@@ -16,6 +20,10 @@ public class FolderTableView {
     private TableColumn<TableData, String> endFileColumn = new TableColumn<>("Extension");
     private TableColumn<TableData, String> sizeFileColumn = new TableColumn<>("Size");
     private TableColumn<TableData, String> lastFileChangedColumn = new TableColumn<>("Last time changed");
+
+    public TableColumn<TableData, String> getNameColumn() {
+        return nameColumn;
+    }
 
     public void setTable(){
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("nameFile"));
