@@ -12,7 +12,7 @@ import java.io.File;
 /**
  * Created by ZloiY on 17.05.2016.
  */
-public class FolderView{
+public class IconView {
     private HBox listFolder;
     private VBox folder;
     private ImageView folderIcon;
@@ -35,9 +35,9 @@ public class FolderView{
         return f;
     }
 
-    FolderView(){}
+    IconView(){}
 
-    FolderView(ImageView folderIcon, double height, double width){
+    IconView(ImageView folderIcon, double height, double width){
         this.folderIcon = folderIcon;
         this.folderIcon.setFitHeight(height);
         this.folderIcon.setFitWidth(width);
