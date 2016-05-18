@@ -10,10 +10,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
-import sun.plugin2.jvm.RemoteJVMLauncher;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.text.SimpleDateFormat;
 
 /**
@@ -27,12 +25,16 @@ public class FilePane {
     private File currentFile;
     private TableView<TableData> listFiles;
     private FolderTableView folderTableView;
+    private TextField tableNameTF;
     final IconView[] folder;
 
     FilePane() {
+        listFiles = new TableView<>();
         folderTableView = new FolderTableView();
         folderTableView.setRandTableColumns(listFiles);
+        folderTableView.setTable();
         tablePane = new BorderPane();
+        tablePane.setCenter(folderTableView.getTable());
         listFolderPane = new HBox(10);
         grid = new GridPane();
         grid.setHgap(20);
@@ -43,7 +45,9 @@ public class FilePane {
         folder = new IconView[1];
         folder[0] = new IconView();
         fileNameTF = new TextField();
+        tableNameTF = new TextField();
         listFolderPane.getChildren().addAll(grid, sc, fileNameTF);
+        tablePane.setRight(tableNameTF);
     }
 
     public HBox getListFolderPane() {
@@ -129,45 +133,50 @@ public class FilePane {
     }
 
     public void setTableView(File path){
-        grid.getChildren().clear();
+        listFiles.getItems().clear();
+        folderTableView.getTable().getItems().clear();
         for (File f: path.listFiles()){
                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-                listFiles.getItems().add(new TableData(f.getName(), getFileExtension(f), f.length(), sdf.toString()));
-                Callback<TableColumn, TableCell> cellFactory =
-                        new Callback<TableColumn, TableCell>() {
-                            public TableCell call(TableColumn param) {
-                                TableCell cell = new TableCell<TableData, String>(){
-                                    public void updateItem(String item, boolean empty){
-                                        super.updateItem(item, empty);
-                                        setText(empty ? null: getString());
-                                        setGraphic(null);
-                                    }
+                listFiles.getItems().add(new TableData(f.getName(), getFileExtension(f), f.length(), sdf.format(f.lastModified())));
+                setTableClikable(f);
+        }
+        folderTableView.getItems(listFiles);
+    }
 
-                                    private String getString(){
-                                        return getItem() == null ? "" : getItem().toString();
-                                    }
-                                };
-                                cell.addEventFilter(MouseEvent.MOUSE_CLICKED, (MouseEvent event)->{
-                                    if (event.getClickCount() == 1){
-                                        fileNameTF.setText(f.getName());
-                                    }
-                                    if (event.getClickCount() == 2){
-                                        currentFile =f;
-                                        setTableView(f);
-                                    }
-                                });
-                                return cell;
+    private void setTableClikable(File path){
+        Callback<TableColumn, TableCell> cellFactory =
+                new Callback<TableColumn, TableCell>() {
+                    public TableCell call(TableColumn param) {
+                        TableCell cell = new TableCell<FolderTableView, String>(){
+                            public void updateItem(String item, boolean empty){
+                                super.updateItem(item, empty);
+                                setText(empty ? null: getString());
+                                setGraphic(null);
+                            }
+
+                            private String getString(){
+                                return getItem() == null ? "" : getItem().toString();
                             }
                         };
-
-        }
+                        cell.addEventFilter(MouseEvent.MOUSE_CLICKED, (MouseEvent event)->{
+                            if (event.getClickCount() == 1){
+                                tableNameTF.setText(path.getName());
+                            }
+                            if (event.getClickCount() == 2){
+                                currentFile =path;
+                                setTableView(path);
+                            }
+                        });
+                        return cell;
+                    }
+                };
     }
 
     private String getFileExtension(File file) {
         String fileName = file.getName();
         if(fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
             return fileName.substring(fileName.lastIndexOf(".")+1);
-        else return "";
+        else return "Folder";
     }
 
 }

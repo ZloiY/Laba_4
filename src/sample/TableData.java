@@ -4,26 +4,26 @@ package sample;
  * Created by ZloiY on 17.05.2016.
  */
 public class TableData {
-    private String nameFIle;
+    private String nameFile;
     private String endFile;
     private Long size;
-    private String lastChange;
+    private String lastChangeFile;
 
     TableData(){}
 
     TableData(String name, String end, Long size, String last){
-        nameFIle = name;
+        nameFile = name;
         endFile = end;
         this.size = size;
-        lastChange = last;
+        lastChangeFile = last;
     }
 
-    public String getNameFIle() {
-        return nameFIle;
+    public String getNameFile() {
+        return nameFile;
     }
 
-    public void setNameFIle(String nameFIle) {
-        this.nameFIle = nameFIle;
+    public void setNameFile(String nameFile) {
+        this.nameFile = nameFile;
     }
 
     public String getEndFile() {
@@ -42,11 +42,11 @@ public class TableData {
         this.size = size;
     }
 
-    public String getLastChange() {
-        return lastChange;
+    public String getLastChangeFile() {
+        return lastChangeFile;
     }
 
-    public void setLastChange(String lastChange) {
-        this.lastChange = lastChange;
+    public void setLastChangeFile(String lastChangeFile) {
+        this.lastChangeFile = lastChangeFile;
     }
 }

@@ -31,6 +31,7 @@ public class App extends Application {
     FilePane folderView;
     BorderPane mainLayout;
     File treeFile;
+    Label currPath;
 
     public void start(Stage window) throws Exception{
         window.setTitle("Custom FileChooser");
@@ -43,6 +44,7 @@ public class App extends Application {
         rbs[1].setGraphic(new ImageView(new Image(getClass().getResourceAsStream("listIcon.png"))));
         rbs[2] = new RadioButton("Table view");
         rbs[2].setGraphic(new ImageView(new Image(getClass().getResourceAsStream("tableIcon.png"))));
+        currPath = new Label("My computer");
         ToggleGroup toggleGroup =new ToggleGroup();
         rbs[0].setToggleGroup(toggleGroup);
         rbs[1].setToggleGroup(toggleGroup);
@@ -64,6 +66,10 @@ public class App extends Application {
             if (rbs[1].isSelected()){
                 setListView(prevFolder);
             }
+            if (rbs[2].isSelected()){
+                setTableView(prevFolder);
+            }
+            currPath.setText(prevFolder.getPath());
         });
         Button homeFolder = new Button("", new ImageView(new Image(getClass().getResourceAsStream("homefolderIcon.png"))));
         homeFolder.setOnAction(e ->{
@@ -75,6 +81,10 @@ public class App extends Application {
             if(rbs[1].isSelected()){
                 setListView(homeFile);
             }
+            if(rbs[2].isSelected()){
+                setTableView(homeFile);
+            }
+            currPath.setText(homeFile.getPath());
         });
         tree.setComputerIcon(new Image(getClass().getResourceAsStream("mycomputerIcon.png")));
         tree.setHardDriveIcon(new Image(getClass().getResourceAsStream("diskIcon.png")));
@@ -91,12 +101,14 @@ public class App extends Application {
         viewHBox.getChildren().add(homeFolder);
         mainLayout.setTop(viewHBox);
         mainLayout.setCenter(folderView.getListFolderPane());
+        mainLayout.setBottom(currPath);
         rbs[0].setOnAction(e ->{
             if (folderView.getCurrentFile() == null){
                 folderView.setFolderView(treeFile);
             }else {
                 setFolderView(folderView.getCurrentFile());
             }
+            currPath.setText(folderView.getCurrentFile().getPath());
         });
         rbs[1].setOnAction(e ->{
             if (folderView.getCurrentFile() == null){
@@ -104,6 +116,15 @@ public class App extends Application {
             }else {
                 setListView(folderView.getCurrentFile());
             }
+            currPath.setText(folderView.getCurrentFile().getPath());
+        });
+        rbs[2].setOnAction(e ->{
+            if(folderView.getCurrentFile() == null){
+                folderView.setTableView(treeFile);
+            }else{
+                setTableView(folderView.getCurrentFile());
+            }
+            currPath.setText(folderView.getCurrentFile().getPath());
         });
         tree.getTreeView().getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
@@ -118,6 +139,12 @@ public class App extends Application {
                     folderView.setListView(treeFile);
                     mainLayout.setCenter(folderView.getListFolderPane());
                 }
+                if(rbs[2].isSelected()){
+                    folderView.setTableView(treeFile);
+                    mainLayout.setCenter(folderView.getTablePane());
+                }
+                folderView.setCurrentFile(treeFile);
+                currPath.setText(treeFile.getPath());
             }
         });
         window.setScene(new Scene(mainLayout, 800, 600));
@@ -141,6 +168,11 @@ public class App extends Application {
     private void setListView(File currentFile){
         folderView.setListView(currentFile);
         mainLayout.setCenter(folderView.getListFolderPane());
+    }
+
+    private  void setTableView(File currentFile){
+        folderView.setTableView(currentFile);
+        mainLayout.setCenter(folderView.getTablePane());
     }
 
     public static void run(String[] args){
