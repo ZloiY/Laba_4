@@ -31,7 +31,9 @@ public class FilePane {
     private ChoiceBox<String> folderListCB;
     private ChoiceBox<String> tableCB;
     private SimpleDateFormat sdf;
-    private Callback<TableColumn, TableCell> cellFactory;
+    private Button openListBtn;
+    private Button openTableBtn;
+    private Callback<TableColumn<TableData, String>, TableCell<TableData, String>> cellFactory;
     final IconView[] folder;
 
     FilePane() {
@@ -40,6 +42,36 @@ public class FilePane {
         folderTableView = new FolderTableView();
         folderTableView.setRandTableColumns(listFiles);
         folderTableView.setTable();
+        cellFactory =
+                new Callback<TableColumn<TableData, String>, TableCell<TableData, String>>() {
+                    public TableCell call(TableColumn p) {
+                        TableCell<TableData, String> cell = new TableCell<TableData, String>() {
+                            public void updateItem(String item, boolean empty) {
+                                super.updateItem(item, empty);
+                                setText(empty ? null : getString());
+                                setGraphic(null);
+                            }
+                            private String getString() {
+                                return getItem() == null ? "" : getItem().toString();
+                            }
+                        };
+                        cell.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
+                            public void handle(MouseEvent event) {
+                                if (event.getClickCount() == 1) {
+                                    tableNameTF.setText(cell.getText());
+                                }
+                                if (event.getClickCount() == 2){
+                                    File currentFile = new File(getCurrentFile() + "/"+cell.getText());
+                                    setCurrentFile(currentFile);
+                                    App.currPath.setText(currentFile.getPath());
+                                    setTableView(currentFile);
+                                }
+                            }
+                        });
+                        return cell;
+                    }
+                };
+
         tablePane = new BorderPane();
         folderListCB = new ChoiceBox<>();
         folderListCB.getItems().addAll("*", "txt", "xml", "sys");
@@ -61,6 +93,16 @@ public class FilePane {
         grid.setPadding(new Insets(0, 10, 20, 10));
         ScrollPane sc = new ScrollPane(grid);
         sc.setFitToHeight(true);
+        openListBtn =new Button("Open");
+        openListBtn.setOnAction(e ->{
+            File finaFile = new File(currentFile.getPath() + fileNameTF.getText());
+            App.currPath.setText(finaFile.getPath());
+        });
+        openTableBtn = new Button("Open");
+        openTableBtn.setOnAction(e ->{
+            File finaFile = new File(currentFile.getPath() + tableNameTF.getText());
+            App.currPath.setText(finaFile.getPath());
+        });
         folder = new IconView[1];
         folder[0] = new IconView();
         fileNameTF = new TextField();
@@ -71,8 +113,8 @@ public class FilePane {
         tableNameTF.setOnAction(e ->{
             setTableView(getCurrentFile());
         });
-        listFolderPane.getChildren().addAll(grid, sc, new VBox(fileNameTF, folderListCB));
-        tablePane.setRight(new VBox(tableNameTF, tableCB));
+        listFolderPane.getChildren().addAll(grid, sc, new VBox(fileNameTF, folderListCB, openListBtn));
+        tablePane.setRight(new VBox(tableNameTF, tableCB, openTableBtn));
     }
 
     public HBox getListFolderPane() {
@@ -185,36 +227,10 @@ public class FilePane {
                     listFiles.getItems().add(new TableData(f.getName(), getFileExtension(f), f.length(), sdf.format(f.lastModified())));
                 }
             }
-             cellFactory =
-                    new Callback<TableColumn, TableCell>() {
-                        public TableCell call(TableColumn p) {
-                            TableCell<TableData, String> cell = new TableCell<TableData, String>() {
-                                public void updateItem(String item, boolean empty) {
-                                    super.updateItem(item, empty);
-                                    setText(empty ? null : getString());
-                                    setGraphic(null);
-                                }
-                                private String getString() {
-                                    return getItem() == null ? "" : getItem().toString();
-                                }
-                            };
-                            cell.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
-                                public void handle(MouseEvent event) {
-                                    if (event.getClickCount() == 1) {
-                                        tableNameTF.setText(f.getName());
-                                    }
-                                    if (event.getClickCount() == 2){
-                                        setTableView(f);
-                                    }
-                                }
-                            });
-                            return cell;
-                        }
-                    };
 
         }
         folderTableView.getItems(listFiles);
-//        folderTableView.getNameColumn().setCellFactory(cellFactory,(TableCell<TableData, String>)cellFactory.call(folderTableView.getNameColumn()));
+        folderTableView.getNameColumn().setCellFactory(cellFactory);
     }
 
     private String getFileExtension(File file) {
