@@ -39,18 +39,18 @@ public class App extends Application {
         folderView = new FilePane();
         rbs = new RadioButton[3];
         rbs[0] = new RadioButton("Folder view");
-        rbs[0].setGraphic(new ImageView(new Image(getClass().getResourceAsStream("folderViewIcon.png"))));
+        rbs[0].setGraphic(new ImageView(new Image("res/folderViewIcon.png")));
         rbs[1] = new RadioButton("List view");
-        rbs[1].setGraphic(new ImageView(new Image(getClass().getResourceAsStream("listIcon.png"))));
+        rbs[1].setGraphic(new ImageView(new Image("res/listIcon.png")));
         rbs[2] = new RadioButton("Table view");
-        rbs[2].setGraphic(new ImageView(new Image(getClass().getResourceAsStream("tableIcon.png"))));
+        rbs[2].setGraphic(new ImageView(new Image("res/tableIcon.png")));
         currPath = new Label("My computer");
         ToggleGroup toggleGroup =new ToggleGroup();
         rbs[0].setToggleGroup(toggleGroup);
         rbs[1].setToggleGroup(toggleGroup);
         rbs[2].setToggleGroup(toggleGroup);
         rbs[0].setSelected(true);
-        Button upFolderButton = new Button("",new ImageView(new Image(getClass().getResourceAsStream("upfolderIcon.png"))));
+        Button upFolderButton = new Button("",new ImageView(new Image("res/upfolderIcon.png")));
         upFolderButton.setOnAction(e -> {
             File prevFolder;
             if (folderView.getCurrentFile() == null){
@@ -71,7 +71,7 @@ public class App extends Application {
             }
             currPath.setText(prevFolder.getPath());
         });
-        Button homeFolder = new Button("", new ImageView(new Image(getClass().getResourceAsStream("homefolderIcon.png"))));
+        Button homeFolder = new Button("", new ImageView(new Image("res/homefolderIcon.png")));
         homeFolder.setOnAction(e ->{
             File homeFile = new File(System.getProperty("user.home"));
             folderView.setCurrentFile(homeFile);
@@ -86,11 +86,11 @@ public class App extends Application {
             }
             currPath.setText(homeFile.getPath());
         });
-        tree.setComputerIcon(new Image(getClass().getResourceAsStream("mycomputerIcon.png")));
-        tree.setHardDriveIcon(new Image(getClass().getResourceAsStream("diskIcon.png")));
-        tree.setFlashDriveIcon(new Image(getClass().getResourceAsStream("flashDriveIcon.png")));
-        tree.setDvdDriveIcon(new Image(getClass().getResourceAsStream("dvdDriveIcon.png")));
-        tree.setFolderIcon(new Image(getClass().getResourceAsStream("folderIcon.png")));
+        tree.setComputerIcon(new Image("res/mycomputerIcon.png"));
+        tree.setHardDriveIcon(new Image("res/diskIcon.png"));
+        tree.setFlashDriveIcon(new Image("res/flashDriveIcon.png"));
+        tree.setDvdDriveIcon(new Image("res/dvdDriveIcon.png"));
+        tree.setFolderIcon(new Image("res/folderIcon.png"));
         tree.setTree();
         mainLayout = new BorderPane();
         mainLayout.setLeft(tree.getTreeView());

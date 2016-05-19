@@ -58,6 +58,8 @@ public class FilePane {
                         cell.addEventFilter(MouseEvent.MOUSE_CLICKED, new EventHandler<MouseEvent>() {
                             public void handle(MouseEvent event) {
                                 if (event.getClickCount() == 1) {
+                                    File file = new File(getCurrentFile() + "/" + cell.getText());
+                                    if (file.isFile())
                                     tableNameTF.setText(cell.getText());
                                 }
                                 if (event.getClickCount() == 2){
@@ -139,7 +141,7 @@ public class FilePane {
         Integer folderColumn = 0;
         for (File f : path.listFiles()) {
             if (f.isDirectory()) {
-                folder[0] = new IconView(new ImageView(new Image(getClass().getResourceAsStream("folderIconBig.png"))), 70.0, 70.0);
+                folder[0] = new IconView(new ImageView(new Image("res/folderIconBig.png")), 70.0, 70.0);
                 folder[0].setFolder(f);
                 if (folderColumn < 5) {
                     grid.add(folder[0].getFolder(), folderColumn, folderRow);
@@ -168,7 +170,7 @@ public class FilePane {
         Integer folderRow = 0;
         for (File f : path.listFiles()) {
             if (f.isFile() && (getFileExtension(f).equals(folderListCB.getValue()) || folderListCB.getValue().equals("*"))) {
-                folder[0] = new IconView(new ImageView(new Image(getClass().getResourceAsStream("fileIcon.png"))), 40.0, 40.0);
+                folder[0] = new IconView(new ImageView(new Image("res/fileIcon.png")), 40.0, 40.0);
                 folder[0].setFolderList(f);
                 folder[0].getListFolder().setOnMouseClicked(e -> {
                     if(e.getButton().equals(MouseButton.PRIMARY)) {
@@ -190,7 +192,7 @@ public class FilePane {
                 }
             } else {
                 if (!f.isFile()) {
-                    folder[0] = new IconView(new ImageView(new Image(getClass().getResourceAsStream("folderIconBig.png"))), 40.0, 40.0);
+                    folder[0] = new IconView(new ImageView(new Image("res/folderIconBig.png")), 40.0, 40.0);
                     folder[0].setFolderList(f);
                     grid.add(folder[0].getListFolder(), 0, folderRow);
                     folderRow++;
