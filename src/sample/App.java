@@ -31,11 +31,35 @@ public class App extends Application {
     private FilePane folderView;
     private BorderPane mainLayout;
     private File treeFile;
+    private File file;
     public static Label currPath;
+
 
     public void start(Stage window) throws Exception{
         window.setTitle("Custom FileChooser");
+        setWindow(window);
+        window.setScene(new Scene(mainLayout, 800, 600));
+        window.show();
+    }
+
+    private void setTreeView(){
+        for (Integer index =0; index < tree.getTreeView().getRoot().getChildren().size(); index++){
+            TreeItem<String> selectedFolder = (TreeItem<String>) tree.getTreeView().getRoot().getChildren().get(index);
+            if(selectedFolder.equals(folderView.getCurrentFile().getPath())){
+                selectedFolder.setExpanded(true);
+            }
+        }
+    }
+
+    public String getFilePath(){
+        return currPath.getText();
+    }
+
+    public void setWindow(Stage window){
+        window = new Stage();
+        window.setTitle("Custom FileChooser");
         tree = new TreeClass();
+        file = null;
         folderView = new FilePane();
         rbs = new RadioButton[3];
         rbs[0] = new RadioButton("Folder view");
@@ -51,41 +75,7 @@ public class App extends Application {
         rbs[2].setToggleGroup(toggleGroup);
         rbs[0].setSelected(true);
         Button upFolderButton = new Button("",new ImageView(new Image("res/upfolderIcon.png")));
-        upFolderButton.setOnAction(e -> {
-            File prevFolder;
-            if (folderView.getCurrentFile() == null){
-                prevFolder = treeFile.getParentFile();
-                folderView.setCurrentFile(prevFolder);
-            }else{
-                prevFolder = folderView.getCurrentFile().getParentFile();
-                folderView.setCurrentFile(prevFolder);
-            }
-            if (rbs[0].isSelected()){
-                setFolderView(prevFolder);
-            }
-            if (rbs[1].isSelected()){
-                setListView(prevFolder);
-            }
-            if (rbs[2].isSelected()){
-                setTableView(prevFolder);
-            }
-            currPath.setText(prevFolder.getPath());
-        });
         Button homeFolder = new Button("", new ImageView(new Image("res/homefolderIcon.png")));
-        homeFolder.setOnAction(e ->{
-            File homeFile = new File(System.getProperty("user.home"));
-            folderView.setCurrentFile(homeFile);
-            if (rbs[0].isSelected()){
-                setFolderView(homeFile);
-            }
-            if(rbs[1].isSelected()){
-                setListView(homeFile);
-            }
-            if(rbs[2].isSelected()){
-                setTableView(homeFile);
-            }
-            currPath.setText(homeFile.getPath());
-        });
         tree.setComputerIcon(new Image("res/mycomputerIcon.png"));
         tree.setHardDriveIcon(new Image("res/diskIcon.png"));
         tree.setFlashDriveIcon(new Image("res/flashDriveIcon.png"));
@@ -102,6 +92,22 @@ public class App extends Application {
         mainLayout.setTop(viewHBox);
         mainLayout.setCenter(folderView.getListFolderPane());
         mainLayout.setBottom(currPath);
+        window.setScene(new Scene(mainLayout, 800, 600));
+        window.show();
+        homeFolder.setOnAction(e ->{
+            File homeFile = new File(System.getProperty("user.home"));
+            folderView.setCurrentFile(homeFile);
+            if (rbs[0].isSelected()){
+                setFolderView(homeFile);
+            }
+            if(rbs[1].isSelected()){
+                setListView(homeFile);
+            }
+            if(rbs[2].isSelected()){
+                setTableView(homeFile);
+            }
+            currPath.setText(homeFile.getPath());
+        });
         rbs[0].setOnAction(e ->{
             if (folderView.getCurrentFile() == null){
                 folderView.setFolderView(treeFile);
@@ -147,18 +153,33 @@ public class App extends Application {
                 currPath.setText(treeFile.getPath());
             }
         });
-        window.setScene(new Scene(mainLayout, 800, 600));
-        window.show();
+        upFolderButton.setOnAction(e -> {
+            File prevFolder;
+            if (folderView.getCurrentFile() == null){
+                prevFolder = treeFile.getParentFile();
+                folderView.setCurrentFile(prevFolder);
+            }else{
+                prevFolder = folderView.getCurrentFile().getParentFile();
+                folderView.setCurrentFile(prevFolder);
+            }
+            if (rbs[0].isSelected()){
+                setFolderView(prevFolder);
+            }
+            if (rbs[1].isSelected()){
+                setListView(prevFolder);
+            }
+            if (rbs[2].isSelected()){
+                setTableView(prevFolder);
+            }
+            currPath.setText(prevFolder.getPath());
+        });
     }
 
-    private void setTreeView(){
-        for (Integer index =0; index < tree.getTreeView().getRoot().getChildren().size(); index++){
-            TreeItem<String> selectedFolder = (TreeItem<String>) tree.getTreeView().getRoot().getChildren().get(index);
-            if(selectedFolder.equals(folderView.getCurrentFile().getPath())){
-                selectedFolder.setExpanded(true);
-            }
-        }
+    public File getFileFunction(){
+        file = new File(getFilePath());
+        return file;
     }
+
 
     private void setFolderView(File currentFile){
         folderView.setFolderView(currentFile);

@@ -97,12 +97,12 @@ public class FilePane {
         sc.setFitToHeight(true);
         openListBtn =new Button("Open");
         openListBtn.setOnAction(e ->{
-            File finaFile = new File(currentFile.getPath() + fileNameTF.getText());
+            File finaFile = new File(currentFile.getPath() + "/" + fileNameTF.getText());
             App.currPath.setText(finaFile.getPath());
         });
         openTableBtn = new Button("Open");
         openTableBtn.setOnAction(e ->{
-            File finaFile = new File(currentFile.getPath() + tableNameTF.getText());
+            File finaFile = new File(currentFile.getPath() + "/" + tableNameTF.getText());
             App.currPath.setText(finaFile.getPath());
         });
         folder = new IconView[1];
