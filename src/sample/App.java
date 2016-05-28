@@ -136,6 +136,7 @@ public class App extends Application {
             public void changed(ObservableValue observable, Object oldValue, Object newValue) {
                 TreeItem<String> selectedItem = (TreeItem<String>) newValue;
                 treeFile = new File(selectedItem.getValue());
+                tree.folderSearch(treeFile, selectedItem);
                 if(rbs[0].isSelected()){
                     folderView.setFolderView(treeFile);
 //                    setTreeView();

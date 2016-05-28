@@ -69,7 +69,7 @@ public class TreeClass {
         treeView = new TreeView<>(rootNode);
     }
 
-    private void folderSearch(File folderList, TreeItem<String> rootNode){
+     public void folderSearch(File folderList, TreeItem<String> rootNode){
         File folders = new File(folderList.getPath());
         Path path = FileSystems.getDefault().getPath(folders.getPath());
         List<File> secList = new ArrayList<File>();
@@ -83,7 +83,7 @@ public class TreeClass {
             }
             for (Integer folderIndex = 0; folderIndex < secList.size(); folderIndex++) {
                 folderNode = new TreeItem<String>(secList.get(folderIndex).toString(), new ImageView(folderIcon));
-                folderSearch(secList.get(folderIndex), folderNode);
+//                folderSearch(secList.get(folderIndex), folderNode);
                 rootNode.getChildren().add(folderNode);
             }
         }
