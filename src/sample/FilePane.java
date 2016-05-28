@@ -31,8 +31,6 @@ public class FilePane {
     private ChoiceBox<String> folderListCB;
     private ChoiceBox<String> tableCB;
     private SimpleDateFormat sdf;
-    private Button openListBtn;
-    private Button openTableBtn;
     private Callback<TableColumn<TableData, String>, TableCell<TableData, String>> cellFactory;
     final IconView[] folder;
 
@@ -95,16 +93,6 @@ public class FilePane {
         grid.setPadding(new Insets(0, 10, 20, 10));
         ScrollPane sc = new ScrollPane(grid);
         sc.setFitToHeight(true);
-        openListBtn =new Button("Open");
-        openListBtn.setOnAction(e ->{
-            File finaFile = new File(currentFile.getPath() + "/" + fileNameTF.getText());
-            App.currPath.setText(finaFile.getPath());
-        });
-        openTableBtn = new Button("Open");
-        openTableBtn.setOnAction(e ->{
-            File finaFile = new File(currentFile.getPath() + "/" + tableNameTF.getText());
-            App.currPath.setText(finaFile.getPath());
-        });
         folder = new IconView[1];
         folder[0] = new IconView();
         fileNameTF = new TextField();
@@ -115,8 +103,8 @@ public class FilePane {
         tableNameTF.setOnAction(e ->{
             setTableView(getCurrentFile());
         });
-        listFolderPane.getChildren().addAll(grid, sc, new VBox(fileNameTF, folderListCB, openListBtn));
-        tablePane.setRight(new VBox(tableNameTF, tableCB, openTableBtn));
+        listFolderPane.getChildren().addAll(grid, sc, new VBox(fileNameTF, folderListCB));
+        tablePane.setRight(new VBox(tableNameTF, tableCB));
     }
 
     public HBox getListFolderPane() {

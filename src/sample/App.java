@@ -31,13 +31,15 @@ public class App extends Application {
     private FilePane folderView;
     private BorderPane mainLayout;
     private File treeFile;
+    private Button openBtn;
     private File file;
+    private Stage window;
     public static Label currPath;
 
 
     public void start(Stage window) throws Exception{
         window.setTitle("Custom FileChooser");
-        setWindow(window);
+        setWindow();
         window.setScene(new Scene(mainLayout, 800, 600));
         window.show();
     }
@@ -55,10 +57,11 @@ public class App extends Application {
         return currPath.getText();
     }
 
-    public void setWindow(Stage window){
+    public File setWindow(){
         window = new Stage();
         window.setTitle("Custom FileChooser");
         tree = new TreeClass();
+        openBtn = new Button("Open");
         file = null;
         folderView = new FilePane();
         rbs = new RadioButton[3];
@@ -85,15 +88,21 @@ public class App extends Application {
         mainLayout = new BorderPane();
         mainLayout.setLeft(tree.getTreeView());
         HBox viewHBox = new HBox(10);
+        HBox pathHBox = new HBox(50);
         viewHBox.setAlignment(Pos.CENTER_LEFT);
         viewHBox.getChildren().addAll(rbs);
         viewHBox.getChildren().add(upFolderButton);
         viewHBox.getChildren().add(homeFolder);
+        pathHBox.getChildren().addAll(currPath, openBtn);
         mainLayout.setTop(viewHBox);
         mainLayout.setCenter(folderView.getListFolderPane());
-        mainLayout.setBottom(currPath);
+        mainLayout.setBottom(pathHBox);
         window.setScene(new Scene(mainLayout, 800, 600));
         window.show();
+        openBtn.setOnAction(e ->{
+            file = new File(currPath.getText());
+            window.close();
+        });
         homeFolder.setOnAction(e ->{
             File homeFile = new File(System.getProperty("user.home"));
             folderView.setCurrentFile(homeFile);
@@ -174,6 +183,7 @@ public class App extends Application {
             }
             currPath.setText(prevFolder.getPath());
         });
+        return file;
     }
 
     public File getFileFunction(){
